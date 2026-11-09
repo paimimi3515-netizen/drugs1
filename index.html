@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบข้อมูลแนวทางการบำบัดรักษาผู้ติดยาเสพติด - Rehabilitation Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Prompt & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        teal: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        emerald: {
+                            50: '#ecfdf5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f8fafc;
+        }
+        .tab-btn.active {
+            background-color: #0d9488;
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.3);
+        }
+        .step-node.active {
+            border-color: #0d9488;
+            background-color: #ccfbf1;
+            color: #0f766e;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="text-slate-700 min-h-screen flex flex-col justify-between">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-gradient-to-r from-teal-800 via-teal-700 to-emerald-800 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md">
+                        <i class="fa-solid font-heart-pulse text-2xl text-teal-200"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-xl md:text-2xl font-bold tracking-tight">คู่มือและระบบข้อมูลการบำบัดรักษาผู้ติดยาเสพติด</h1>
+                            <span class="bg-emerald-400/20 text-emerald-200 text-xs px-2.5 py-0.5 rounded-full border border-emerald-300/30">ข้อมูลทางการแพทย์</span>
+                        </div>
+                        <p class="text-xs md:text-sm text-teal-100/80 font-light">Comprehensive Drug Rehabilitation & Recovery Analytics Guidance</p>
+                    </div>
+                </div>
+
+                <!-- Emergency Contact Badge -->
+                <div class="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/15">
+                    <div class="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center animate-pulse shadow-md">
+                        <i class="fa-solid fa-phone text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-teal-100">ปรึกษาบำบัดยาเสพติด (ฟรี 24 ชม.)</p>
+                        <a href="tel:1165" class="text-lg font-bold text-white hover:text-emerald-200 transition-colors">สายด่วน 1165</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
+
+        <!-- Top Legal Banner & Concept -->
+        <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl p-6 mb-8 text-white shadow-md relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 opacity-10 text-white pointer-events-none">
+                <i class="fa-solid fa-hands-holding-child text-[180px]"></i>
+            </div>
+            <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="max-w-3xl">
+                    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                        <i class="fa-solid fa-scale-balanced"></i> พ.ร.บ. ประมวลกฎหมายยาเสพติดไทย
+                    </div>
+                    <h2 class="text-2xl font-bold mb-2">ยึดหลักการใหญ่: "ผู้เสพ คือ ผู้ป่วย"</h2>
+                    <p class="text-sm md:text-base text-emerald-50 leading-relaxed font-light">
+                        มุ่งเน้นการเปิดโอกาสให้ผู้ติดยาเสพติดเข้ารับการบำบัดรักษาด้วยระบบสมัครใจ โดยไม่ถือเป็นความผิดทางอาญา 
+                        เพื่อคืนคนดีสู่สังคมและฟื้นฟูคุณภาพชีวิตอย่างยั่งยืน
+                    </p>
+                </div>
+                <div class="flex-shrink-0">
+                    <button onclick="switchTab('methods')" class="bg-white text-teal-800 hover:bg-teal-50 px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md transition duration-200 flex items-center gap-2">
+                        <i class="fa-solid fa-compass"></i> สำรวจ 3 วิธีการบำบัด
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Stats Bar -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-hospital-user"></i>
+                </div>
+                <div>
+                    <span class="text-xs text-slate-400 font-medium uppercase">รูปแบบหลัก</span>
+                    <h3 class="text-2xl font-bold text-slate-800">3 วิธีการบำบัด</h3>
+                    <p class="text-xs text-slate-500">ตามระดับอาการและบริบท</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-notes-medical"></i>
+                </div>
+                <div>
+                    <span class="text-xs text-slate-400 font-medium uppercase">การบำบัดแพทย์</span>
+                    <h3 class="text-2xl font-bold text-slate-800">4 ขั้นตอน</h3>
+                    <p class="text-xs text-slate-500">เตรียมตัว - ถอนพิษ - ฟื้นฟู - ติดตาม</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-users text-xl"></i>
+                </div>
+                <div>
+                    <span class="text-xs text-slate-400 font-medium uppercase">บำบัดโดยชุมชน</span>
+                    <h3 class="text-2xl font-bold text-slate-800">CBTx Model</h3>
+                    <p class="text-xs text-slate-500">รพ.สต. + ชุมชนดูแล</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div>
+                    <span class="text-xs text-slate-400 font-medium uppercase">ระยะเวลาพักฟื้น</span>
+                    <h3 class="text-2xl font-bold text-slate-800">4 - 12 เดือน</h3>
+                    <p class="text-xs text-slate-500">สำหรับชุมชนบำบัด (TC)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-slate-200 pb-3">
+            <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn active px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2">
+                <i class="fa-solid fa-chart-pie"></i> ภาพรวม (Overview)
+            </button>
+            <button onclick="switchTab('methods')" id="tab-methods" class="tab-btn bg-white text-slate-600 hover:bg-slate-100 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2">
+                <i class="fa-solid fa-layer-group"></i> รายละเอียด 3 รูปแบบบำบัด
+            </button>
+            <button onclick="switchTab('medical-stepper')" id="tab-medical-stepper" class="tab-btn bg-white text-slate-600 hover:bg-slate-100 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2">
+                <i class="fa-solid fa-bars-staggered"></i> ขั้นตอนบำบัดทางการแพทย์
+            </button>
+            <button onclick="switchTab('comparison')" id="tab-comparison" class="tab-btn bg-white text-slate-600 hover:bg-slate-100 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2">
+                <i class="fa-solid fa-table-columns"></i> ตารางเปรียบเทียบ
+            </button>
+        </div>
+
+        <!-- TAB CONTENT 1: OVERVIEW -->
+        <div id="content-overview" class="tab-content block space-y-6">
+            <!-- Grid of 3 Methods Preview -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Method 1 Card -->
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition duration-300 border border-slate-100 overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80" alt="Medical Treatment" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                            <span class="absolute top-3 left-3 bg-teal-800/90 text-white text-xs px-3 py-1 rounded-full backdrop-blur-md">วิธีที่ 1</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center gap-2 text-teal-600 mb-2">
+                                <i class="fa-solid fa-user-doctor"></i>
+                                <span class="text-xs font-semibold uppercase tracking-wider">Medical & Clinical Treatment</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">การบำบัดด้วยวิธีทางการแพทย์</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                                การดูแลในโรงพยาบาลหรือสถาบันเฉพาะทาง เน้นทั้งร่างกายและจิตใจโดยทีมแพทย์และนักจิตวิทยา ผ่าน 4 ขั้นตอนอย่างเป็นระบบ
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0">
+                        <button onclick="switchTab('methods'); scrollToCard('method-1')" class="w-full bg-slate-50 hover:bg-teal-50 text-teal-700 font-medium text-sm py-2.5 rounded-xl border border-slate-200 hover:border-teal-300 transition duration-200 flex items-center justify-center gap-2">
+                            ดูรายละเอียด <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Method 2 Card -->
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition duration-300 border border-slate-100 overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=800&q=80" alt="Community-Based Treatment" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                            <span class="absolute top-3 left-3 bg-emerald-800/90 text-white text-xs px-3 py-1 rounded-full backdrop-blur-md">วิธีที่ 2</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center gap-2 text-emerald-600 mb-2">
+                                <i class="fa-solid fa-people-roof"></i>
+                                <span class="text-xs font-semibold uppercase tracking-wider">Community-Based (CBTx)</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">การบำบัดโดยชุมชนเป็นศูนย์กลาง</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                                เน้นให้ผู้ติดยาบำบัดในชุมชนตนเองโดยไม่ต้องแยกตัวเป็นเวลานาน โดยอาศัยความร่วมมือจากครอบครัว ชุมชน และ รพ.สต.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0">
+                        <button onclick="switchTab('methods'); scrollToCard('method-2')" class="w-full bg-slate-50 hover:bg-emerald-50 text-emerald-700 font-medium text-sm py-2.5 rounded-xl border border-slate-200 hover:border-emerald-300 transition duration-200 flex items-center justify-center gap-2">
+                            ดูรายละเอียด <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Method 3 Card -->
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition duration-300 border border-slate-100 overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-44 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80" alt="Therapeutic Community" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                            <span class="absolute top-3 left-3 bg-cyan-800/90 text-white text-xs px-3 py-1 rounded-full backdrop-blur-md">วิธีที่ 3</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center gap-2 text-cyan-700 mb-2">
+                                <i class="fa-solid fa-hands-holding-circle"></i>
+                                <span class="text-xs font-semibold uppercase tracking-wider">Therapeutic Community (TC)</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">การบำบัดด้วยชุมชนบำบัด</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                                กระบวนการพักอาศัยระยะยาว (4–12 เดือน) ในชุมชนจำลอง เพื่อปรับโครงสร้างพฤติกรรม วินัย และฝึกทักษะชีวิตอย่างเข้มข้น
+                            </p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-0">
+                        <button onclick="switchTab('methods'); scrollToCard('method-3')" class="w-full bg-slate-50 hover:bg-cyan-50 text-cyan-700 font-medium text-sm py-2.5 rounded-xl border border-slate-200 hover:border-cyan-300 transition duration-200 flex items-center justify-center gap-2">
+                            ดูรายละเอียด <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Guidelines Banner -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col md:flex-row items-center gap-6">
+                <div class="w-16 h-16 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center text-3xl flex-shrink-0">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-1">การเลือกระบบบำบัดที่เหมาะสมขึ้นอยู่กับอะไร?</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        การตัดสินใจเลือกวิธีการบำบัดจะพิจารณาจาก <strong>ระดับความรุนแรงของการเสพติด</strong>, <strong>สภาพร่างกายและจิตใจ</strong>, 
+                        รวมถึง <strong>บริบททางครอบครัวและสังคม</strong> โดยสามารถปรึกษาแพทย์หรือเจ้าหน้าที่สาธารณสุขใกล้บ้านเพื่อทำการประเมินล่วงหน้าได้ฟรี
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT 2: DETAILED METHODS -->
+        <div id="content-methods" class="tab-content hidden space-y-8">
+            
+            <!-- Method 1 Detailed -->
+            <div id="method-1" class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden scroll-mt-24">
+                <div class="bg-gradient-to-r from-teal-700 to-teal-800 p-6 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <span class="bg-teal-900/50 text-teal-200 text-xs px-3 py-1 rounded-full font-medium">รูปแบบที่ 1</span>
+                        <h2 class="text-2xl font-bold mt-2">1. การบำบัดด้วยวิธีทางการแพทย์ (Medical & Clinical Treatment)</h2>
+                        <p class="text-teal-100 text-sm font-light">การบำบัดรักษาในโรงพยาบาลหรือสถาบันเฉพาะทางโดยทีมแพทย์และนักจิตวิทยา</p>
+                    </div>
+                    <span class="bg-white/10 border border-white/20 text-white text-xs px-3 py-1.5 rounded-xl">
+                        <i class="fa-solid fa-hospital"></i> สถานที่: โรงพยาบาล / สถาบันบำบัด
+                    </span>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 space-y-4">
+                        <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-teal-600"></i> 4 ขั้นตอนหลักของการบำบัดทางการแพทย์:
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <div class="font-semibold text-teal-800 text-sm mb-1 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-800 text-xs flex items-center justify-center font-bold">1</span>
+                                    ขั้นเตรียมการ (Pre-admission)
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">ตรวจร่างกาย ประเมินระดับการติดสารเสพติด ตรวจหาโรคแทรกซ้อน และเตรียมความพร้อมทางจิตใจก่อนเข้ารักษา</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <div class="font-semibold text-teal-800 text-sm mb-1 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-800 text-xs flex items-center justify-center font-bold">2</span>
+                                    ขั้นถอนพิษยา (Detoxification)
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">การหยุดสารเสพติดและจ่ายยาบรรเทา "อาการลงแดง" หรืออาการถอนยา (ปวดกล้ามเนื้อ กระวนกระวาย นอนไม่หลับ) โดยแพทย์</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <div class="font-semibold text-teal-800 text-sm mb-1 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-800 text-xs flex items-center justify-center font-bold">3</span>
+                                    ขั้นฟื้นฟูสมรรถภาพ (Rehabilitation)
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">ปรับพฤติกรรม ฝึกทักษะการปฏิเสธ จัดการความเครียด เพื่อป้องกันการกลับไปเสพซ้ำ</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <div class="font-semibold text-teal-800 text-sm mb-1 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-teal-100 text-teal-800 text-xs flex items-center justify-center font-bold">4</span>
+                                    ขั้นติดตามดูแล (Follow-up)
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">ติดตามผลหลังออกจากโรงพยาบาล เพื่อประเมินการดำเนินชีวิต ให้กำลังใจ และช่วยเหลือปัญหาที่เกิดขึ้น</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-teal-50/60 p-5 rounded-xl border border-teal-100 flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-teal-900 text-sm mb-3"><i class="fa-solid fa-user-check"></i> เหมาะสำหรับใคร?</h4>
+                            <ul class="text-xs text-teal-800 space-y-2 mb-4">
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-teal-600 mt-0.5"></i> ผู้มีภาวะติดสารเสพติดระดับปานกลางถึงรุนแรง</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-teal-600 mt-0.5"></i> ผู้ที่มีอาการถอนยาเสพติดรุนแรง หรือมีโรคแทรกซ้อน</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-teal-600 mt-0.5"></i> ผู้ที่ต้องการการดูแลอย่างใกล้ชิดจากทีมบุคลากรทางการแพทย์</li>
+                            </ul>
+                        </div>
+                        <button onclick="switchTab('medical-stepper')" class="w-full bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold py-2.5 rounded-lg transition">
+                            ดู Interactive Stepper 4 ขั้นตอน
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Method 2 Detailed -->
+            <div id="method-2" class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden scroll-mt-24">
+                <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 p-6 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <span class="bg-emerald-900/50 text-emerald-100 text-xs px-3 py-1 rounded-full font-medium">รูปแบบที่ 2</span>
+                        <h2 class="text-2xl font-bold mt-2">2. การบำบัดโดยชุมชนเป็นศูนย์กลาง (Community-Based Treatment: CBTx)</h2>
+                        <p class="text-emerald-100 text-sm font-light">การบำบัดและดูแลในชุมชนตนเอง ไม่ต้องแยกตัวไปเข้าสถานพยาบาลเป็นเวลานาน</p>
+                    </div>
+                    <span class="bg-white/10 border border-white/20 text-white text-xs px-3 py-1.5 rounded-xl">
+                        <i class="fa-solid fa-house-chimney"></i> สถานที่: ชุมชน / รพ.สต.
+                    </span>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 space-y-4">
+                        <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-network-wired text-emerald-600"></i> รูปแบบและกระบวนการทำงาน:
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold flex-shrink-0">
+                                    <i class="fa-solid fa-users"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-slate-800 text-sm">พลังร่วมของชุมชน</h4>
+                                    <p class="text-xs text-slate-600">รวมพลังจากครอบครัว ชุมชน ผู้นำท้องถิ่น อาสาสมัครสาธารณสุข (อสม.) และเจ้าหน้าที่ประจำ รพ.สต. ในการติดตามและสนับสนุน</p>
+                                </div>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold flex-shrink-0">
+                                    <i class="fa-solid fa-comments"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-slate-800 text-sm">การปรึกษาแบบสั้น (Brief Intervention - BI)</h4>
+                                    <p class="text-xs text-slate-600">ให้คำแนะนำ คำปรึกษา และการสะท้อนพฤติกรรมเพื่อสร้างแรงจูงใจในการลด ละ เลิก ยาเสพติด</p>
+                                </div>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold flex-shrink-0">
+                                    <i class="fa-solid fa-hand-holding-heart"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-slate-800 text-sm">กลุ่มช่วยเหลือกันเอง (Self-help group) & สภาพแวดล้อมเชิงบวก</h4>
+                                    <p class="text-xs text-slate-600">สร้างกิจกรรมเชิงบวกในพื้นที่ ให้คนในชุมชนมอบโอกาสและกำลังใจ ช่วยให้ผู้บำบัดไม่รู้สึกถูกตีตรา</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-emerald-50/60 p-5 rounded-xl border border-emerald-100 flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-emerald-900 text-sm mb-3"><i class="fa-solid fa-user-check"></i> เหมาะสำหรับใคร?</h4>
+                            <ul class="text-xs text-emerald-800 space-y-2">
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-emerald-600 mt-0.5"></i> ผู้ที่เพิ่งเริ่มเสพ หรือผู้ติดยาเสพติดระดับปานกลาง</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-emerald-600 mt-0.5"></i> ผู้ที่ยังสามารถดำเนินชีวิตประจำวันและทำงานในสังคมได้</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-emerald-600 mt-0.5"></i> ผู้ที่มีครอบครัวหรือชุมชนคอยให้การสนับสนุนและดูแลอย่างใกล้ชิด</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4 p-3 bg-white rounded-lg border border-emerald-200">
+                            <span class="text-[11px] text-emerald-700 font-medium block">จุดเด่นของ CBTx:</span>
+                            <p class="text-[11px] text-slate-500">ลดค่าใช้จ่าย ไม่ต้องหยุดงาน รักษาสัมพันธ์ที่ดีกับครอบครัว</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Method 3 Detailed -->
+            <div id="method-3" class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden scroll-mt-24">
+                <div class="bg-gradient-to-r from-cyan-700 to-blue-800 p-6 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <span class="bg-cyan-900/50 text-cyan-200 text-xs px-3 py-1 rounded-full font-medium">รูปแบบที่ 3</span>
+                        <h2 class="text-2xl font-bold mt-2">3. การบำบัดด้วยชุมชนบำบัด (Therapeutic Community: TC)</h2>
+                        <p class="text-cyan-100 text-sm font-light">กระบวนการบำบัดพักอาศัยระยะยาว (4–12 เดือน) โดยใช้ "ชุมชนจำลอง" เป็นเครื่องมือรักษา</p>
+                    </div>
+                    <span class="bg-white/10 border border-white/20 text-white text-xs px-3 py-1.5 rounded-xl">
+                        <i class="fa-solid fa-building-user"></i> สถานที่: ศูนย์ฟื้นฟูสมรรถภาพระยะยาว
+                    </span>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 space-y-4">
+                        <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved text-cyan-600"></i> กระบวนการสำคัญในชุมชนบำบัด:
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <div class="w-8 h-8 rounded-lg bg-cyan-100 text-cyan-800 flex items-center justify-center font-bold mb-2">
+                                    <i class="fa-solid fa-clock-rotate-left"></i>
+                                </div>
+                                <h4 class="font-semibold text-slate-800 text-sm mb-1">ปรับโครงสร้างพฤติกรรม</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">ฝึกระเบียบวินัย ตรงต่อเวลา มีความรับผิดชอบต่อตนเองและหน้าที่ส่วนรวมในศูนย์</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <div class="w-8 h-8 rounded-lg bg-cyan-100 text-cyan-800 flex items-center justify-center font-bold mb-2">
+                                    <i class="fa-solid fa-comments-dollar"></i>
+                                </div>
+                                <h4 class="font-semibold text-slate-800 text-sm mb-1">กลุ่มบำบัดจิตวิทยา</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">แลกเปลี่ยนประสบการณ์ สำรวจปัญหาทางอารมณ์ ปมในใจ และการเยียวยาจิตใจร่วมกับเพื่อนสมาชิก</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <div class="w-8 h-8 rounded-lg bg-cyan-100 text-cyan-800 flex items-center justify-center font-bold mb-2">
+                                    <i class="fa-solid fa-briefcase"></i>
+                                </div>
+                                <h4 class="font-semibold text-slate-800 text-sm mb-1">พัฒนาทักษะชีวิต & อาชีพ</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">ฝึกทักษะการทำงาน เสริมสร้างความมั่นใจในตนเอง เตรียมความพร้อมคืนสู่สังคมอย่างมีคุณภาพ</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-cyan-50/60 p-5 rounded-xl border border-cyan-100 flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-cyan-900 text-sm mb-3"><i class="fa-solid fa-user-check"></i> เหมาะสำหรับใคร?</h4>
+                            <ul class="text-xs text-cyan-800 space-y-2">
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-cyan-600 mt-0.5"></i> ผู้ติดยาเสพติดเรื้อรังมายาวนาน</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-cyan-600 mt-0.5"></i> ผู้ที่เคยล้มเหลวจากการบำบัดรูปแบบอื่นมาแล้วหลายครั้ง</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-cyan-600 mt-0.5"></i> ผู้ที่ต้องการการปรับเปลี่ยนบุคลิกภาพและวิถีชีวิตแบบถอนรากถอนโคน</li>
+                            </ul>
+                        </div>
+                        <div class="mt-4 p-3 bg-white rounded-lg border border-cyan-200">
+                            <span class="text-[11px] text-cyan-800 font-medium block">ระยะเวลาบำบัด:</span>
+                            <p class="text-[11px] text-slate-500">โดยทั่วไปใช้เวลา 4 - 12 เดือน</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TAB CONTENT 3: MEDICAL STEPPER -->
+        <div id="content-medical-stepper" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+                <div class="mb-6 text-center max-w-2xl mx-auto">
+                    <span class="bg-teal-50 text-teal-700 text-xs font-semibold px-3 py-1 rounded-full">Interactive Flowchart</span>
+                    <h2 class="text-2xl font-bold text-slate-800 mt-2">เจาะลึก 4 ขั้นตอนการบำบัดทางการแพทย์</h2>
+                    <p class="text-xs text-slate-500 mt-1">คลิกที่แต่ละขั้นตอนเพื่ออ่านรายละเอียดการปฏิบัติงานทางการแพทย์</p>
+                </div>
+
+                <!-- Stepper Navigation -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+                    <button onclick="setMedicalStep(1)" id="step-btn-1" class="step-node active p-4 rounded-xl border-2 transition-all flex flex-col items-center text-center">
+                        <span class="text-xs font-bold uppercase mb-1">ขั้นตอนที่ 1</span>
+                        <span class="text-sm font-semibold">ขั้นเตรียมการ</span>
+                        <span class="text-[10px] text-slate-500 mt-1">Pre-admission</span>
+                    </button>
+                    <button onclick="setMedicalStep(2)" id="step-btn-2" class="step-node p-4 rounded-xl border-2 border-slate-100 bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all flex flex-col items-center text-center">
+                        <span class="text-xs font-bold uppercase mb-1">ขั้นตอนที่ 2</span>
+                        <span class="text-sm font-semibold">ขั้นถอนพิษยา</span>
+                        <span class="text-[10px] text-slate-500 mt-1">Detoxification</span>
+                    </button>
+                    <button onclick="setMedicalStep(3)" id="step-btn-3" class="step-node p-4 rounded-xl border-2 border-slate-100 bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all flex flex-col items-center text-center">
+                        <span class="text-xs font-bold uppercase mb-1">ขั้นตอนที่ 3</span>
+                        <span class="text-sm font-semibold">ขั้นฟื้นฟูสมรรถภาพ</span>
+                        <span class="text-[10px] text-slate-500 mt-1">Rehabilitation</span>
+                    </button>
+                    <button onclick="setMedicalStep(4)" id="step-btn-4" class="step-node p-4 rounded-xl border-2 border-slate-100 bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all flex flex-col items-center text-center">
+                        <span class="text-xs font-bold uppercase mb-1">ขั้นตอนที่ 4</span>
+                        <span class="text-sm font-semibold">ขั้นติดตามดูแล</span>
+                        <span class="text-[10px] text-slate-500 mt-1">Follow-up</span>
+                    </button>
+                </div>
+
+                <!-- Step Detail Box -->
+                <div id="step-detail-box" class="bg-slate-50 rounded-2xl p-6 border border-slate-200 min-h-[220px] flex items-center">
+                    <!-- Dynamic Javascript Content Will Be Inserted Here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT 4: COMPARISON TABLE -->
+        <div id="content-comparison" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden p-6">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-slate-800">ตารางเปรียบเทียบ 3 วิธีการบำบัดรักษา</h2>
+                    <p class="text-xs text-slate-500">สรุปความแตกต่างในมิติต่างๆ เพื่อเป็นแนวทางในการเลือกการบำบัดที่เหมาะสม</p>
+                </div>
+                
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-100 text-slate-800 font-bold uppercase text-xs">
+                            <tr>
+                                <th class="p-4 rounded-l-xl">ประเด็นการเปรียบเทียบ</th>
+                                <th class="p-4 text-teal-800">1. ทางการแพทย์ (Medical)</th>
+                                <th class="p-4 text-emerald-800">2. ชุมชนเป็นศูนย์กลาง (CBTx)</th>
+                                <th class="p-4 text-cyan-800 rounded-r-xl">3. ชุมชนบำบัด (TC)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr>
+                                <td class="p-4 font-semibold text-slate-800">กลุ่มเป้าหมายหลัก</td>
+                                <td class="p-4 text-xs">ติดปานกลาง-รุนแรง / มีอาการถอนยารุนแรง / มีโรคแทรกซ้อน</td>
+                                <td class="p-4 text-xs">เริ่มเสพ หรือ ติดระดับปานกลาง ยังทำงานและอยู่กับครอบครัวได้</td>
+                                <td class="p-4 text-xs">ติดเรื้อรังยาวนาน / เคยล้มเหลวจากการบำบัดวิธีอื่น</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-semibold text-slate-800">สถานที่ดำเนินการ</td>
+                                <td class="p-4 text-xs">โรงพยาบาล / สถาบันบำบัดยาเสพติดเฉพาะทาง</td>
+                                <td class="p-4 text-xs">ชุมชนของผู้ป่วย / รพ.สต. / บ้าน</td>
+                                <td class="p-4 text-xs">ศูนย์ฟื้นฟูสมรรถภาพแบบพักอาศัย (Residential Center)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-semibold text-slate-800">ระยะเวลาการบำบัด</td>
+                                <td class="p-4 text-xs">ระยะสั้น - ปานกลาง (ตามดลยพินิจของแพทย์)</td>
+                                <td class="p-4 text-xs">ต่อเนื่องในวิถีชีวิตประจำวัน</td>
+                                <td class="p-4 text-xs">ระยะยาว (ประมาณ 4 – 12 เดือน)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-semibold text-slate-800">ผู้ดูแลหลัก</td>
+                                <td class="p-4 text-xs">ทีมแพทย์ พยาบาล นักจิตวิทยา นักสังคมสงเคราะห์</td>
+                                <td class="p-4 text-xs">ครอบครัว ผู้นำชุมชน อสม. เจ้าหน้าที่ รพ.สต.</td>
+                                <td class="p-4 text-xs">พี่เลี้ยงในศูนย์ เจ้าหน้าที่จิตวิทยา และกลุ่มเพื่อนผู้บำบัด</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-semibold text-slate-800">จุดเน้นหลักในการบำบัด</td>
+                                <td class="p-4 text-xs">การรักษาทางกายภาพ การจ่ายยาบรรเทาถอนพิษ และฟื้นฟูจิตใจ</td>
+                                <td class="p-4 text-xs">การให้คำปรึกษาแบบสั้น การยอมรับของสังคม และสร้างแรงจูงใจ</td>
+                                <td class="p-4 text-xs">ปรับโครงสร้างพฤติกรรม สร้างวินัย กลุ่มบำบัด และทักษะอาชีพ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <p class="text-sm font-semibold text-slate-300">ระบบข้อมูลแนวทางการบำบัดรักษาผู้ติดยาเสพติด</p>
+                <p class="text-xs text-slate-500 mt-1">สนับสนุนข้อมูลตามหลัก "ผู้เสพ คือ ผู้ป่วย" | ปรึกษาฟรีตลอด 24 ชั่วโมง</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="tel:1165" class="bg-teal-600 hover:bg-teal-700 text-white text-xs px-4 py-2 rounded-xl transition font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-phone"></i> โทร 1165 (สายด่วนบำบัด)
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Interactivity -->
+    <script>
+        // Data for Medical Stepper
+        const medicalStepsData = {
+            1: {
+                title: "1. ขั้นเตรียมการ (Pre-admission)",
+                icon: "fa-clipboard-user",
+                color: "teal",
+                desc: "เป็นขั้นตอนแรกในการสร้างสัมพันธภาพ และตระหนักถึงปัญหาการติดยาเสพติด",
+                details: [
+                    "ตรวจประเมินร่างกาย สภาพจิตใจ และระดับการติดสารเสพติดอย่างละเอียด",
+                    "ซักประวัติการใช้ยา ตรวจปัสสาวะ และตรวจหาโรคแทรกซ้อนทางกาย (เช่น ไวรัสตับอักเสบ, HIV)",
+                    "ให้คำปรึกษาแก่ผู้ป่วยและครอบครัว เพื่อสร้างแรงจูงใจและความพร้อมในการเข้ากระบวนการบำบัด"
+                ]
+            },
+            2: {
+                title: "2. ขั้นถอนพิษยา (Detoxification)",
+                icon: "fa-capsules",
+                color: "emerald",
+                desc: "เน้นการดูแลด้านร่างกายเพื่อช่วยให้ผู้ป่วยผ่านพ้นช่วงที่มีอาการถอนยาเสพติดอย่างปลอดภัย",
+                details: [
+                    "หยุดการใช้สารเสพติดอย่างเด็ดขาดภายใต้การดูแลใกล้ชิดของทีมแพทย์",
+                    "จ่ายยาทางการแพทย์เพื่อบรรเทา 'อาการลงแดง' เช่น อาการปวดกล้ามเนื้อ นอนไม่หลับ วิตกกังวล หรือคลื่นไส้",
+                    "เฝ้าระวังและป้องกันภาวะแทรกซ้อนทางร่างกายและจิตใจที่อาจเกิดขึ้นในระยะถอนพิษ"
+                ]
+            },
+            3: {
+                title: "3. ขั้นฟื้นฟูสมรรถภาพ (Rehabilitation)",
+                icon: "fa-brain",
+                color: "cyan",
+                desc: "เน้นการปรับเปลี่ยนพฤติกรรม จิตใจ และความคิด เพื่อป้องกันการกลับไปเสพซ้ำ",
+                details: [
+                    "ทำจิตบำบัดรายบุคคลและกลุ่มบำบัด เพื่อสำรวจสาเหตุเชิงลึกของการติดยา",
+                    "ฝึกทักษะการปฏิเสธเมื่อถูกชักชวน และการจัดการกับความอยากยา (Craving Management)",
+                    "ฝึกการจัดการความเครียด และการปรับตัวให้เข้ากับครอบครัวและสังคม"
+                ]
+            },
+            4: {
+                title: "4. ขั้นติดตามดูแล (Follow-up)",
+                icon: "fa-user-nurse",
+                color: "blue",
+                desc: "การติดตามดูแลอย่างต่อเนื่องหลังจากออกจากสถานพยาบาล เพื่อการฟื้นฟูที่ยั่งยืน",
+                details: [
+                    "นัดตรวจติดตามผลตามระยะเวลาอย่างสม่ำเสมอ เพื่อประเมินการดำเนินชีวิต",
+                    "ให้คำปรึกษาและกำลังใจแก่ผู้ป่วยและครอบครัวเมื่อเผชิญอุปสรรคในการกลับสู่สังคม",
+                    "ประสานงานส่งต่อเครือข่ายชุมชนเพื่อช่วยเหลือเรื่องงานและชีวิตความเป็นอยู่"
+                ]
+            }
+        };
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('bg-white', 'text-slate-600');
+            });
+
+            // Show selected tab content
+            const activeContent = document.getElementById(`content-${tabId}`);
+            if (activeContent) {
+                activeContent.classList.remove('hidden');
+                activeContent.classList.add('block');
+            }
+
+            // Activate selected tab button
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                activeBtn.classList.remove('bg-white', 'text-slate-600');
+            }
+        }
+
+        // Scroll to specific method card
+        function scrollToCard(cardId) {
+            setTimeout(() => {
+                const card = document.getElementById(cardId);
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        }
+
+        // Stepper Logic for Medical Treatment
+        function setMedicalStep(stepNum) {
+            // Update node styles
+            for (let i = 1; i <= 4; i++) {
+                const node = document.getElementById(`step-btn-${i}`);
+                if (i === stepNum) {
+                    node.classList.add('active');
+                    node.classList.remove('bg-slate-50', 'text-slate-600', 'border-slate-100');
+                } else {
+                    node.classList.remove('active');
+                    node.classList.add('bg-slate-50', 'text-slate-600', 'border-slate-100');
+                }
+            }
+
+            // Render Detail Box Content
+            const data = medicalStepsData[stepNum];
+            const detailBox = document.getElementById('step-detail-box');
+            
+            let listHtml = data.details.map(item => `
+                <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
+                    <i class="fa-solid fa-circle-check text-teal-600 mt-1 flex-shrink-0"></i>
+                    <span>${item}</span>
+                </li>
+            `).join('');
+
+            detailBox.innerHTML = `
+                <div class="w-full space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center text-lg">
+                            <i class="fa-solid ${data.icon}"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800">${data.title}</h3>
+                            <p class="text-xs text-slate-500">${data.desc}</p>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-t border-slate-200/60">
+                        <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">รายละเอียดการปฏิบัติงาน:</h4>
+                        <ul class="space-y-2">
+                            ${listHtml}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize Default State on Load
+        window.onload = function() {
+            setMedicalStep(1);
+        };
+    </script>
+</body>
+</html>
